@@ -6,7 +6,7 @@ namespace Vocables
     {
         static void Main(string[] args)
         {
-
+            Console.WriteLine("Vi testar GIT");
             Console.ReadKey();
         }
     }
