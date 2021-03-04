@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Vocables": {
+      "commandName": "Project",
+      "commandLineArgs": "-add"
+    }
+  }
+}
