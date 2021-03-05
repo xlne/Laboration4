@@ -11,6 +11,7 @@ namespace ClassLibrary
     {
         //Ha en metod som läser in från filen - loadLIst
         //TODO Borde vara någon koppling till den streamreader för listorna?
+        //GetFileName??
 
 
         public static void CreateFolder()
@@ -116,23 +117,37 @@ namespace ClassLibrary
 
             }
         }
+
+
         public int Count()
         //Räknar och returnerar antal ord i listan.
         {
-            int wordCount = 0;
-            for (int i = 0; i < .Count; i++)
+            using (var file = new StreamReader(LoadList.localpath)) //TODO Fixa sökvägen alt hela using-parametern
             {
-                //TODO if - sats för att kontrollera tomma platser? kommer det vara det?
-                while (wordsList != null)
+                int wordCount = -1;          
+                string line = File.ReadLines();
+                while (file != null)
                 {
-                    
+                    wordCount++;
+                    line = File.ReadLines();
                 }
-                wordCount += wordCount;
+                return wordCount;
             }
-            return wordCount;
+
         }
-        public void List(int sortByTranslation, Action<string[]> showTranslations);
+        public void List(int sortByTranslation, Action<string[]> showTranslations)
         //sortByTranslation = Vilket språk listan ska sorteras på.showTranslations = Callback som anropas för varje ord i listan.
+        {
+            if (sortByTranslation < 0 || sortByTranslation >= Languages.Count())
+            {
+
+            }
+            foreach (Word word in wordsList.OrderBy(w => w.Translations[sortByTranslation]).ToList())
+            {
+                showTranslations?.Invoke(wordsList.Translations);
+            }
+        }
+
 
         //Kunna använda ett lamdauttryck
 
