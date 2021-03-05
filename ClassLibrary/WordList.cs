@@ -13,7 +13,6 @@ namespace ClassLibrary
         //TODO Borde vara någon koppling till den streamreader för listorna?
         //GetFileName??
 
-
         public static void CreateFolder()
         {
             string localPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"Vocable\");
@@ -29,8 +28,9 @@ namespace ClassLibrary
             }
         }
 
+        private List<Word> wordsList = new List<Word>();        //Lista för listorna?
 
-        private List<Word> wordsList = new List<Word>();
+        public List<string[]> wordListen { get; set; }                 //Lista för alla ord i vald lista. 
 
         public string Name { get; }
         //Namnet på listan.
@@ -50,7 +50,7 @@ namespace ClassLibrary
             string[] listName = Directory.GetFiles("Vocable");       //TODO Vad stoppa in?
             for (int i = 0; i < listName.Length; i++)
             {
-                listName[i]; //sökväg på något sätt till listan
+                //listName[i]; //sökväg på något sätt till listan
             }
 
             return listName;
@@ -63,6 +63,8 @@ namespace ClassLibrary
         //dekl ny wordlist, går in while-loop !not end stream, 
         {
             WordList words = null;
+            List<string[]> localList = new List<string[]>();
+
             var localpath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Vocable", $"{name}.dat");
 
             if (!File.Exists(localpath))
@@ -78,19 +80,20 @@ namespace ClassLibrary
                 while (!file.EndOfStream)
                 {
                     var translations = file.ReadLine().TrimEnd(';', ' ').Split(';');
-                    words.Add(translations);
+                    localList.Add(translations);
                 }
             }
+            words.wordListen = localList;
             return words;
         }
-        public void Save();
+        //public void Save();
         // Sparar listan till en fil med samma namn som listan och filändelse.dat
-
+        //Stream
 
         public void Add(params string[] translations)
         //Lägger till ord i listan.Kasta ArgumentException om det är fel antal translations.
         {
-            foreach (var definition in )
+            foreach (var item in translations)
             {
 
             }
@@ -105,67 +108,57 @@ namespace ClassLibrary
 
         }
 
-        public bool Remove(int translation, string word)
-        //translation motsvarar index i Languages.Sök igenom språket och ta bort ordet.
-        {
-            for (int i = 0; i < wordList.Count; i++)
-            {
-                if (Languages[i] == wordList.)
-                {
+        //public bool Remove(int translation, string word)
+        ////translation motsvarar index i Languages.Sök igenom språket och ta bort ordet.
+        //{
+        //   wordListen.Remove
+            
+        //    for (int i = 0; i < wordList.Count; i++)
+        //    {
+        //        if (Languages[i] == wordList.)
+        //        {
 
-                }
+        //        }
 
-            }
-        }
+        //    }
+        //}
 
 
-        public int Count()
+        public int Count() => wordListen.Count;
         //Räknar och returnerar antal ord i listan.
-        {
-            using (var file = new StreamReader(LoadList.localpath)) //TODO Fixa sökvägen alt hela using-parametern
-            {
-                int wordCount = -1;          
-                string line = File.ReadLines();
-                while (file != null)
-                {
-                    wordCount++;
-                    line = File.ReadLines();
-                }
-                return wordCount;
-            }
-
-        }
-        public void List(int sortByTranslation, Action<string[]> showTranslations)
-        //sortByTranslation = Vilket språk listan ska sorteras på.showTranslations = Callback som anropas för varje ord i listan.
-        {
-            if (sortByTranslation < 0 || sortByTranslation >= Languages.Count())
-            {
-
-            }
-            foreach (Word word in wordsList.OrderBy(w => w.Translations[sortByTranslation]).ToList())
-            {
-                showTranslations?.Invoke(wordsList.Translations);
-            }
-        }
-
-
-        //Kunna använda ett lamdauttryck
-
-        public Word GetWordToPractice()
-        //Returnerar slumpmässigt Word från listan, med slumpmässigt valda FromLanguage och ToLanguage(dock inte samma).
-        {
-            Random rnd = new Random();
-            int index = rnd.Next(wordList.Count);
-
-            int fromLanguage = rnd.Next(0, Languages.Length);
-            int toLanguage = rnd.Next(0, Languages.Length);
-
-            while (fromLanguage == toLanguage)
-            {
-
-            }
-            return new Word(fromLanguage, toLanguage, wordList[index].Translations);
-        }
-
+                    
     }
+    //public void List(int sortByTranslation, Action<string[]> showTranslations)
+    ////sortByTranslation = Vilket språk listan ska sorteras på.showTranslations = Callback som anropas för varje ord i listan.
+    //{
+    //    if (sortByTranslation < 0 || sortByTranslation >= Languages.Count())
+    //    {
+
+    //    }
+    //    foreach (Word word in wordsList.OrderBy(w => w.Translations[sortByTranslation]).ToList())
+    //    {
+    //        showTranslations?.Invoke(word.Translations);
+    //    }
+    //}
+
+
+    //Kunna använda ett lamdauttryck
+
+    //public Word GetWordToPractice()
+    ////Returnerar slumpmässigt Word från listan, med slumpmässigt valda FromLanguage och ToLanguage(dock inte samma).
+    //{
+    //    Random rnd = new Random();
+    //    int index = rnd.Next(wordList.Count);
+
+    //    int fromLanguage = rnd.Next(0, Languages.Length);
+    //    int toLanguage = rnd.Next(0, Languages.Length);
+
+    //    while (fromLanguage == toLanguage)
+    //    {
+
+    //    }
+    //    return new Word(fromLanguage, toLanguage, wordList[index].Translations);
+    //}
+
 }
+

@@ -13,7 +13,11 @@ namespace ClassLibrary
         public Word(params string[] translations)
         //initialiserar ’Translations’ med data som skickas in som ’translations’
         {
-            Translations = translations;
+            for (int i = 0; i < translations.Length; i++)
+            {
+            Translations[i] = translations[i];
+
+            }
         }
 
 
