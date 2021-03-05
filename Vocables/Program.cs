@@ -6,6 +6,7 @@ namespace Vocables
 {
     class Program
     {
+        public delegate WordList LoadWordList(string name);
         static void Main(string[] args)
         {
             WordList.CreateFolder();
@@ -40,11 +41,16 @@ namespace Vocables
             }
             else if (args[0] == "-count")
             {
-                // Do stuff
+                LoadWordList wordList = new LoadWordList(WordList.LoadList);
+                WordList wordList1 = wordList.Invoke(args[1]); //Skriv listnamnet i
+                //wordList1.Count();
+                Console.WriteLine(wordList1.Count());
             }
             else if (args[0] == "-add")
             {
-                WordList.Add();
+                LoadWordList wordList = new LoadWordList(WordList.LoadList);
+                WordList wordList1 = wordList.Invoke(args[1]); //Skriv listnamnet i
+                wordList1.Add();                
             }
             else if (args[0] == "-new")
             {
