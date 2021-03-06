@@ -13,9 +13,10 @@ namespace ClassLibrary
         //TODO Borde vara någon koppling till den streamreader för listorna?
         //GetFileName??
 
+
         public static void CreateFolder()
         {
-            string localPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"Vocable\");
+            string localPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"Vocables");
 
             if (Directory.Exists(localPath))
             {
@@ -47,11 +48,8 @@ namespace ClassLibrary
         public static string[] GetLists()
         //Returnerar array med namn på alla listor som finns lagrade(utan filändelsen).
         {
-            string[] listName = Directory.GetFiles("Vocable");       //TODO Vad stoppa in?
-            for (int i = 0; i < listName.Length; i++)
-            {
-                //listName[i]; //sökväg på något sätt till listan
-            }
+            string localPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"Vocables"); //TODO göra localPath global?
+            string[] listName = Directory.GetFiles(localPath, "*.dat");       //Söker och listar alla filer som slutar på .dat
 
             return listName;
         }
@@ -65,7 +63,7 @@ namespace ClassLibrary
             WordList words = null;
             List<string[]> localList = new List<string[]>();
 
-            var localpath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Vocable", $"{name}.dat");
+            var localpath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Vocables", $"{name}.dat");
 
             if (!File.Exists(localpath))
             {

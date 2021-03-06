@@ -69,9 +69,9 @@ namespace Vocables
         {
             Console.WriteLine("Use any of the following parameters:\n " +
                 "-lists\n " +
-                "-new < list name > < language 1 > < language 2 > .. < language n >\n " +
-                "-add < list name >\n " +
-                "-remove < list name > < language > < word 1 > < word 2 > .. < word n >\n " +
+                "-new < listname > < language 1 > < language 2 > .. < language n >\n " +
+                "-add < listname >\n " +
+                "-remove < listname > < language > < word 1 > < word 2 > .. < word n >\n " +
                 "-words <listname> < sortByLanguage >\n " +
                 "-count < listname >\n " +
                 "-practice < listname >\n ");
