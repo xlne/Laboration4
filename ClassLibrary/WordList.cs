@@ -13,19 +13,29 @@ namespace ClassLibrary
         //TODO Borde vara någon koppling till den streamreader för listorna?
         //GetFileName??
 
+        //localPath pekar på användarens \AppData\Local\Vocables
+        public static string localPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"Vocables");
+        
+        
 
         public static void CreateFolder()
         {
-            string localPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"Vocables");
-
-            if (Directory.Exists(localPath))
+            
+            try
             {
-                Console.WriteLine(localPath + " already exists.");
+                if (Directory.Exists(localPath))
+                {
+                    Console.WriteLine(localPath + " already exists. No action taken.");
+                }
+                else
+                {
+                    DirectoryInfo cd = Directory.CreateDirectory(localPath);
+                    Console.WriteLine(localPath + " was successfully created.");
+                }
             }
-            else
+            catch(Exception e)
             {
-                DirectoryInfo cd = Directory.CreateDirectory(localPath);
-                Console.WriteLine(localPath + " was successfully created.");
+                Console.WriteLine(e.Message);
             }
         }
 
@@ -48,10 +58,10 @@ namespace ClassLibrary
         public static string[] GetLists()
         //Returnerar array med namn på alla listor som finns lagrade(utan filändelsen).
         {
-            string localPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"Vocables"); //TODO göra localPath global?
-            string[] listName = Directory.GetFiles(localPath, "*.dat");       //Söker och listar alla filer som slutar på .dat
+            
+            string[] listLists = Directory.GetFiles(localPath, "*.dat");       //Söker och listar alla filer som slutar på .dat
 
-            return listName;
+            return listLists;
         }
 
 
@@ -63,14 +73,14 @@ namespace ClassLibrary
             WordList words = null;
             List<string[]> localList = new List<string[]>();
 
-            var localpath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Vocables", $"{name}.dat");
+            var localpathListName = Path.Combine(localPath, $"{name}.dat");
 
-            if (!File.Exists(localpath))
+            if (!File.Exists(localpathListName))
             {
                 return null;
             }
 
-            using (var file = new StreamReader(localpath))
+            using (var file = new StreamReader(localpathListName))
             {
                 var languageDefinition = file.ReadLine().TrimEnd(';', ' ').Split(';');
                 words = new WordList(name, languageDefinition);
@@ -84,9 +94,11 @@ namespace ClassLibrary
             words.wordListen = localList;
             return words;
         }
-        //public void Save();
-        // Sparar listan till en fil med samma namn som listan och filändelse.dat
-        //Stream
+        public void Save() // Sparar listan till en fil med samma namn som listan och filändelse.dat
+        {
+            
+        }
+
 
         public void Add(params string[] translations)
         //Lägger till ord i listan.Kasta ArgumentException om det är fel antal translations.
