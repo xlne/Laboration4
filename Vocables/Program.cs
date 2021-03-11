@@ -44,7 +44,7 @@ namespace Vocables
                 LoadWordList wordList = new LoadWordList(WordList.LoadList);
                 WordList wordList1 = wordList.Invoke(args[1]); //Skriv listnamnet i
                 //wordList1.Count();
-                Console.WriteLine(wordList1.Count());
+                Console.WriteLine(wordList1.Count()+" words exists in this wordlist.");
             }
             else if (args[0] == "-add")
             {
@@ -75,6 +75,8 @@ namespace Vocables
                 "-words <listname> < sortByLanguage >\n " +
                 "-count < listname >\n " +
                 "-practice < listname >\n ");
+
+            //TODO efter här, ha någon fråga till användaren?
         }        
     }
 }

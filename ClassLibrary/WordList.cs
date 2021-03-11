@@ -63,14 +63,14 @@ namespace ClassLibrary
             WordList words = null;
             List<string[]> localList = new List<string[]>();
 
-            var localpath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Vocables", $"{name}.dat");
+            var localPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Vocables", $"{name}.dat");
 
-            if (!File.Exists(localpath))
+            if (!File.Exists(localPath))
             {
                 return null;
             }
 
-            using (var file = new StreamReader(localpath))
+            using (var file = new StreamReader(localPath))
             {
                 var languageDefinition = file.ReadLine().TrimEnd(';', ' ').Split(';');
                 words = new WordList(name, languageDefinition);
@@ -84,79 +84,103 @@ namespace ClassLibrary
             words.wordListen = localList;
             return words;
         }
-        //public void Save();
-        // Sparar listan till en fil med samma namn som listan och filändelse.dat
-        //Stream
+        public void Save()
+        //Sparar listan till en fil med samma namn som listan och filändelse.dat
+        {            
+            
+        }
+
 
         public void Add(params string[] translations)
-        //Lägger till ord i listan.Kasta ArgumentException om det är fel antal translations.
+        //Lägger till ord i listan. Kasta ArgumentException om det är fel antal translations.
         {
-            foreach (var item in translations)
-            {
+            StringBuilder stringBuilder = new StringBuilder();
 
+            //For each language in Languages, add language
+            foreach (var language in Languages)
+            {
+                stringBuilder.Append($"{language};");
             }
 
-            //wordList.Add(new Word(translations)); //??
+            //For each word in WordList(the list for lists), add new line and the translation
+            foreach (Word words in wordsList)
+            {
+                stringBuilder.Append($"\n");
+                foreach (var translation in words.Translations)
+                {
+                    stringBuilder.Append($"{translation};");
+                }
+            }
+
+            //Get the name of the list and set .dat in end.
+            File.WriteAllText($"{Environment.SpecialFolder.LocalApplicationData}{Name}.dat", stringBuilder.ToString());
+
+
+            //foreach (Word word in wordsList)
+            //{
+
+            //}
+
+            //wordsList.Add(new Word(translations)); //??
             //string newWord;
-            //for (int i = 0; i < wordList.Count; i++)
-            //{                
+            //for (int i = 0; i < wordsList.Count; i++)
+            //{
             //    newWord = Console.ReadLine();
             //    Add(newWord);
             //}
 
         }
 
-        //public bool Remove(int translation, string word)
-        ////translation motsvarar index i Languages.Sök igenom språket och ta bort ordet.
+    //public bool Remove(int translation, string word)
+    ////translation motsvarar index i Languages.Sök igenom språket och ta bort ordet.
+    //{
+    //   wordListen.Remove
+
+    //    for (int i = 0; i < wordList.Count; i++)
+    //    {
+    //        if (Languages[i] == wordList.)
+    //        {
+
+    //        }
+
+    //    }
+    //}
+
+    public int Count() => wordListen.Count;
+        //Räknar och returnerar antal ord i listan.
+
+
+        //public void List(int sortByTranslation, Action<string[]> showTranslations)
+        ////sortByTranslation = Vilket språk listan ska sorteras på.showTranslations = Callback som anropas för varje ord i listan.
         //{
-        //   wordListen.Remove
-            
-        //    for (int i = 0; i < wordList.Count; i++)
+        //    if (sortByTranslation < 0 || sortByTranslation >= Languages.Count())
         //    {
-        //        if (Languages[i] == wordList.)
-        //        {
 
-        //        }
-
+        //    }
+        //    foreach (Word word in wordsList.OrderBy(w => w.Translations[sortByTranslation]).ToList())
+        //    {
+        //        showTranslations?.Invoke(word.Translations);
         //    }
         //}
 
 
-        public int Count() => wordListen.Count;
-        //Räknar och returnerar antal ord i listan.
-                    
+        //Kunna använda ett lamdauttryck
+
+        //public Word GetWordToPractice()
+        ////Returnerar slumpmässigt Word från listan, med slumpmässigt valda FromLanguage och ToLanguage(dock inte samma).
+        //{
+        //    Random rnd = new Random();
+        //    int index = rnd.Next(wordList.Count);
+
+        //    int fromLanguage = rnd.Next(0, Languages.Length);
+        //    int toLanguage = rnd.Next(0, Languages.Length);
+
+        //    while (fromLanguage == toLanguage)
+        //    {
+
+        //    }
+        //    return new Word(fromLanguage, toLanguage, wordList[index].Translations);
+        //}
     }
-    //public void List(int sortByTranslation, Action<string[]> showTranslations)
-    ////sortByTranslation = Vilket språk listan ska sorteras på.showTranslations = Callback som anropas för varje ord i listan.
-    //{
-    //    if (sortByTranslation < 0 || sortByTranslation >= Languages.Count())
-    //    {
-
-    //    }
-    //    foreach (Word word in wordsList.OrderBy(w => w.Translations[sortByTranslation]).ToList())
-    //    {
-    //        showTranslations?.Invoke(word.Translations);
-    //    }
-    //}
-
-
-    //Kunna använda ett lamdauttryck
-
-    //public Word GetWordToPractice()
-    ////Returnerar slumpmässigt Word från listan, med slumpmässigt valda FromLanguage och ToLanguage(dock inte samma).
-    //{
-    //    Random rnd = new Random();
-    //    int index = rnd.Next(wordList.Count);
-
-    //    int fromLanguage = rnd.Next(0, Languages.Length);
-    //    int toLanguage = rnd.Next(0, Languages.Length);
-
-    //    while (fromLanguage == toLanguage)
-    //    {
-
-    //    }
-    //    return new Word(fromLanguage, toLanguage, wordList[index].Translations);
-    //}
-
 }
 
