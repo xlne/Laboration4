@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ClassLibrary;
@@ -12,7 +13,7 @@ namespace Vocables
         {
             WordList.CreateFolder();
 
-                       
+
 
             Console.WriteLine();
 
@@ -50,31 +51,64 @@ namespace Vocables
             else if (args[0] == "-add") //Lägger till nya ord i vald lista, avslutas när anv matar in en tom rad.
             {
                 LoadWordList wordList = new LoadWordList(WordList.LoadList);
-                WordList wordList1 = wordList.Invoke(args[1]);
-                wordList1.Add();                
+                WordList wordList1 = wordList.Invoke(args[1]);              //Lista för språken
+                string[] languages = wordList1.Languages;
+
+                List<string> tempWordList = new List<string>();
+                int i = 0;
+
+                while (true)
+                {
+                    Console.WriteLine($"Enter a {languages[i % languages.Length]} word : ");
+                    string input = Console.ReadLine();
+                    if (input == "" || input == " ")
+                    {
+                        break;
+                    }
+                    tempWordList.Add(input);
+                    i++;
+                }
+                wordList1.Add(tempWordList.ToArray()); //TODO Lägga till orden i lista ist för skriva över
+
+
             }
             else if (args[0] == "-new") //Skapar en ny fil/lista med angivna språk
             {
-                using (StreamWriter sw = new StreamWriter(Path.Combine(WordList.localPath, $"{args[1]}.dat")))
+                List<string> tempargslist = new List<String>();
+                //Skriver in semikolonseparerade språk i listan, oavsett hur många det är. Dvs ett "godtyckligt" antal. :)
+                for (int j = 2; j < args.Length; j++)
                 {
-                    int i;
-                    //Skriver in semikolonseparerade språk i listan, oavsett hur många det är. Dvs ett "godtyckligt" antal. :)
-                    for (i = 2; i < args.Length; i++)
-                    {
-                        sw.Write($"{args[i].ToString()};");
-                    }
-
+                    tempargslist.Add(args[j]);
                 }
+                WordList wordlist = new WordList(args[1],tempargslist.ToArray());
                 Console.WriteLine($"The file {args[1]}.dat was created successfully.");
+                //TODO lägg till en trycatch
                 //TODO hur kalla på -add?
-                
+                                   
+                string[] languages = wordlist.Languages;
+
+                List<string> tempWordList = new List<string>();
+                int i = 0;
+
+                while (true)
+                {
+                    Console.WriteLine($"Enter a {languages[i % languages.Length]} word : ");
+                    string input = Console.ReadLine();
+                    if (input == "" || input == " ")
+                    {
+                        break;
+                    }
+                    tempWordList.Add(input);
+                    i++;
+                }
+                wordlist.Add(tempWordList.ToArray());
             }
             else
             {
                 PrintUsage();
             }
-            Console.WriteLine();
-        
+
+            Console.WriteLine("Press any key to end program.");
             Console.ReadKey();
         }
 
@@ -88,6 +122,6 @@ namespace Vocables
                 "-words <listname> < sortByLanguage >\n " +
                 "-count < listname >\n " +
                 "-practice < listname >\n ");
-        }        
+        }
     }
 }

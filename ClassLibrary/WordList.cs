@@ -15,12 +15,12 @@ namespace ClassLibrary
 
         //localPath pekar på användarens \AppData\Local\Vocables
         public static string localPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"Vocables");
-        
-        
+
+
 
         public static void CreateFolder()
         {
-            
+
             try
             {
                 if (Directory.Exists(localPath))
@@ -33,7 +33,7 @@ namespace ClassLibrary
                     Console.WriteLine(localPath + " was successfully created.");
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine(e.Message);
             }
@@ -41,7 +41,7 @@ namespace ClassLibrary
 
         private List<Word> wordsList = new List<Word>();        //Lista för listorna?
 
-        public List<string[]> wordListen { get; set; }                 //Lista för alla ord i vald lista. 
+        //public List<string[]> wordListen { get; set; }          //Lista för alla ord i vald lista. 
 
         public string Name { get; }
         //Namnet på listan.
@@ -53,12 +53,13 @@ namespace ClassLibrary
         {
             this.Name = name;
             this.Languages = languages;
+            
         }
 
         public static string[] GetLists()
         //Returnerar array med namn på alla listor som finns lagrade(utan filändelsen).
         {
-            
+
             string[] listLists = Directory.GetFiles(localPath, "*.dat");       //Söker och listar alla filer som slutar på .dat
 
             return listLists;
@@ -73,14 +74,14 @@ namespace ClassLibrary
             WordList words = null;
             List<string[]> localList = new List<string[]>();
 
-            var localpathListName = Path.Combine(localPath, $"{name}.dat");
+            var localPathListName = Path.Combine(localPath, $"{name}.dat");
 
-            if (!File.Exists(localpathListName))
+            if (!File.Exists(localPathListName))
             {
                 return null;
             }
 
-            using (var file = new StreamReader(localpathListName))
+            using (var file = new StreamReader(localPathListName))
             {
                 var languageDefinition = file.ReadLine().TrimEnd(';', ' ').Split(';');
                 words = new WordList(name, languageDefinition);
@@ -91,30 +92,83 @@ namespace ClassLibrary
                     localList.Add(translations);
                 }
             }
-            words.wordListen = localList;
+
+            List<Word> tempwordList = new List<Word>();
+            for (int i = 0; i < localList.Count; i++)
+            {
+                tempwordList.Add(new Word(localList[i]));
+            }
+            words.wordsList = tempwordList;
             return words;
         }
         public void Save() // Sparar listan till en fil med samma namn som listan och filändelse.dat
         {
-            
+            StringBuilder stringBuilder = new StringBuilder();
+            string fileName = Path.Combine(localPath, $"{Name}.dat");
+            if (!File.Exists(fileName))
+            {
+                using (StreamWriter streamWriter = File.CreateText(fileName))
+                {
+                    foreach (var item in Languages)
+                    {
+                        stringBuilder.Append(item + ";");
+                    }
+                    streamWriter.WriteLine(stringBuilder.ToString());
+                }
+            }
+            else
+            {
+                using (StreamWriter streamWriter = new StreamWriter(fileName))
+                {
+                    foreach (var item in Languages)
+                    {
+                        stringBuilder.Append(item + ";");
+                    }
+                    streamWriter.WriteLine(stringBuilder.ToString());
+                    stringBuilder = new StringBuilder();
+
+                    foreach (var item in wordsList)
+                    {
+                        foreach (var wordInItem in item.Translations)
+                        {
+                            stringBuilder.Append(wordInItem + ";");
+                        }
+                        streamWriter.WriteLine(stringBuilder.ToString());
+                        stringBuilder = new StringBuilder();
+                    }
+                }
+            }
         }
 
 
         public void Add(params string[] translations)
-        //Lägger till ord i listan.Kasta ArgumentException om det är fel antal translations.
+        //Lägger till ord i listan. Kasta ArgumentException om det är fel antal translations.
         {
-            foreach (var item in translations)
+            StringBuilder stringBuilder = new StringBuilder();
+
+            int length = translations.Length % Languages.Length;
+            if (length == 0) 
             {
-
+                List<string> tempList = new List<string>();
+                for (int i = 0; i < translations.Length; i++)
+                {
+                    tempList.Add(translations[i]);
+                    if (i % Languages.Length-1 == 0 && i != 0)
+                    {
+                        
+                        wordsList.Add(new Word(tempList.ToArray()));
+                        tempList = new List<string>();
+                    }
+                }
             }
+            else
+            {
+                throw new ArgumentException();
+            } 
+            Save();
 
-            //wordList.Add(new Word(translations)); //??
-            //string newWord;
-            //for (int i = 0; i < wordList.Count; i++)
-            //{                
-            //    newWord = Console.ReadLine();
-            //    Add(newWord);
-            //}
+            //ta ut längd på ord och spara i en separat lista
+            //Kolla längd på vår lista. trans = lang list. trans.Length % lang.Length. 
 
         }
 
@@ -122,7 +176,7 @@ namespace ClassLibrary
         ////translation motsvarar index i Languages.Sök igenom språket och ta bort ordet.
         //{
         //   wordListen.Remove
-            
+
         //    for (int i = 0; i < wordList.Count; i++)
         //    {
         //        if (Languages[i] == wordList.)
@@ -134,9 +188,9 @@ namespace ClassLibrary
         //}
 
 
-        public int Count() => wordListen.Count;
+        public int Count() => wordsList.Count;
         //Räknar och returnerar antal ord i listan.
-                    
+
     }
     //public void List(int sortByTranslation, Action<string[]> showTranslations)
     ////sortByTranslation = Vilket språk listan ska sorteras på.showTranslations = Callback som anropas för varje ord i listan.

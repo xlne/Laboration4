@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ClassLibrary
 {
@@ -7,17 +8,18 @@ namespace ClassLibrary
         public string[] Translations { get; }
         public int FromLanguage { get; }
         public int ToLanguage { get; }
-        
+
         //WordList.GetWordToPractice(); //TODO Ska denna vara här?
 
         public Word(params string[] translations)
         //initialiserar ’Translations’ med data som skickas in som ’translations’
         {
-            for (int i = 0; i < translations.Length; i++)
+            List<string> translation = new List<string>();
+            foreach (var @string in translations)
             {
-            Translations[i] = translations[i];
-
+                translation.Add(@string);
             }
+            Translations = translation.ToArray();
         }
 
 
