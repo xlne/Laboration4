@@ -13,10 +13,6 @@ namespace Vocables
         {
             WordList.CreateFolder();
 
-
-
-            Console.WriteLine();
-
             if (args.Count() == 0)
             {
                 PrintUsage();
@@ -30,12 +26,100 @@ namespace Vocables
             }
             else if (args[0] == "-practice")
             {
-                // Do stuff
+                /*
+                 * Ber användaren översätta ett slumpvis valt ord ur listan från ett slumpvis valt språk till ett annat. Skriver ut om det var rätt eller fel, och fortsätter fråga efter ord tills användaren lämnar en tom inmatning. Då skrivs antal övade ord ut, samt hur stor andel av orden man haft rätt på.
+                 */
 
+                if (File.Exists($"{WordList.localPath}\\{args[1]}.dat"))
+                {
+                    if (args.Length < 1)
+                    {
+                        Console.WriteLine("Enter listname to begin word practice.");
+                        return;
+                    }
+                    LoadWordList wordList = new LoadWordList(WordList.LoadList); //Laddar in listan
+                    WordList wordList1 = wordList.Invoke(args[1]); //Skapa ny lista där vi kallar på listnamn/lägger in ord?
+                                        
+                    int totalGuesses = 0;
+                    int correctAnswers = 0;
+
+                    while (true)
+                    {
+                        Word word = wordList1.GetWordToPractice();
+                        
+                        Console.WriteLine(
+                            $"Translate the \"{wordList1.Languages[word.FromLanguage]}\" word: " +
+                            $"{word.Translations[word.FromLanguage]}, " +
+                            $"to \"{wordList1.Languages[word.ToLanguage]}\"");
+
+                        string input = Console.ReadLine();
+
+                        if (input == "" || input == " ")
+                        {
+                            Console.WriteLine($"You guessed correct {correctAnswers} out of {totalGuesses} times.");
+                            Console.ReadKey();
+                            break;
+                        }
+                        else if(input == word.Translations[word.ToLanguage])
+                        {
+                            Console.WriteLine("That is the correct answer!");
+                            totalGuesses++;
+                            correctAnswers++;
+                            continue;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Wrong answer. Try again.");
+                            totalGuesses++;
+                            continue;
+                        }
+                    }
+                }
             }
             else if (args[0] == "-remove")
             {
-                // Do stuff
+                if (File.Exists($"{WordList.localPath}\\{args[1]}.dat"))
+                {
+                    if (args.Length < 4)
+                    {
+                        // skriv felmeddelande här
+                        return;
+                    }
+
+                    LoadWordList wordList = new LoadWordList(WordList.LoadList); //Laddar in listan
+                    WordList wordList1 = wordList.Invoke(args[1]); //Skapa ny lista där vi kallar på listnamn?
+                    string[] languages = wordList1.Languages; //Lägger in översättningar till nya listan
+                    string lang = args[2];
+                    string[] wordsToBeRemoved = args[3..];
+
+                    int langIndex = -1;
+
+                    for (int i = 0; i < languages.Length; i++)
+                    {
+                        if (languages[i].Equals(lang, StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            langIndex = i;
+                            break;
+                        }
+                    }
+
+                    if (langIndex > -1)
+                    {
+                        foreach (var w in wordsToBeRemoved)
+                        {
+                            if (wordList1.Remove(langIndex, w))
+                            {
+                                // skriv ut borttaget ord
+                                Console.WriteLine($"{w} was removed from list.");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Could not find the word.");
+                            }
+                        }
+                        wordList1.Save(); //Sparar efter loopen för minska prestandapåverkan?
+                    }
+                }
             }
             else if (args[0] == "-words")
             {
@@ -45,7 +129,6 @@ namespace Vocables
             {
                 LoadWordList wordList = new LoadWordList(WordList.LoadList);
                 WordList wordList1 = wordList.Invoke(args[1]);
-                //wordList1.Count();
                 Console.WriteLine(wordList1.Count());
             }
             else if (args[0] == "-add") //Lägger till nya ord i vald lista, avslutas när anv matar in en tom rad.
@@ -68,31 +151,30 @@ namespace Vocables
                     tempWordList.Add(input);
                     i++;
                 }
-                wordList1.Add(tempWordList.ToArray()); //TODO Lägga till orden i lista ist för skriva över
-
+                wordList1.Add(tempWordList.ToArray());
+                //TODO Lägga till orden i lista ist för skriva över
 
             }
             else if (args[0] == "-new") //Skapar en ny fil/lista med angivna språk
             {
-                List<string> tempargslist = new List<String>();
+                List<string> tempArgsList = new List<String>();
                 //Skriver in semikolonseparerade språk i listan, oavsett hur många det är. Dvs ett "godtyckligt" antal. :)
                 for (int j = 2; j < args.Length; j++)
                 {
-                    tempargslist.Add(args[j]);
+                    tempArgsList.Add(args[j]);
                 }
-                WordList wordlist = new WordList(args[1],tempargslist.ToArray());
+                WordList wordList = new WordList(args[1], tempArgsList.ToArray());
                 Console.WriteLine($"The file {args[1]}.dat was created successfully.");
-                //TODO lägg till en trycatch
-                //TODO hur kalla på -add?
-                                   
-                string[] languages = wordlist.Languages;
+                //TODO lägg till en trycatch? lägga till en if?
+
+                string[] languages = wordList.Languages;
 
                 List<string> tempWordList = new List<string>();
                 int i = 0;
 
                 while (true)
                 {
-                    Console.WriteLine($"Enter a {languages[i % languages.Length]} word : ");
+                    Console.WriteLine($"Enter a {languages[i % languages.Length]} word : "); //TODO kapar sista orden som läggs in
                     string input = Console.ReadLine();
                     if (input == "" || input == " ")
                     {
@@ -101,7 +183,9 @@ namespace Vocables
                     tempWordList.Add(input);
                     i++;
                 }
-                wordlist.Add(tempWordList.ToArray());
+                //TODO Skriver över, lägger inte till i existerande lista
+                wordList.Add(tempWordList.ToArray());
+                wordList.Save();
             }
             else
             {
@@ -111,7 +195,6 @@ namespace Vocables
             Console.WriteLine("Press any key to end program.");
             Console.ReadKey();
         }
-
         public static void PrintUsage()
         {
             Console.WriteLine("Use any of the following parameters:\n " +

@@ -9,18 +9,12 @@ namespace ClassLibrary
 {
     public class WordList
     {
-        //Ha en metod som läser in från filen - loadLIst
-        //TODO Borde vara någon koppling till den streamreader för listorna?
-        //GetFileName??
-
         //localPath pekar på användarens \AppData\Local\Vocables
         public static string localPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"Vocables");
 
 
-
         public static void CreateFolder()
         {
-
             try
             {
                 if (Directory.Exists(localPath))
@@ -40,9 +34,7 @@ namespace ClassLibrary
         }
 
         private List<Word> wordsList = new List<Word>();        //Lista för listorna?
-
-        //public List<string[]> wordListen { get; set; }          //Lista för alla ord i vald lista. 
-
+               
         public string Name { get; }
         //Namnet på listan.
         public string[] Languages { get; }
@@ -53,7 +45,7 @@ namespace ClassLibrary
         {
             this.Name = name;
             this.Languages = languages;
-            
+
         }
 
         public static string[] GetLists()
@@ -140,22 +132,20 @@ namespace ClassLibrary
             }
         }
 
-
         public void Add(params string[] translations)
         //Lägger till ord i listan. Kasta ArgumentException om det är fel antal translations.
         {
             StringBuilder stringBuilder = new StringBuilder();
 
             int length = translations.Length % Languages.Length;
-            if (length == 0) 
+            if (length == 0)
             {
                 List<string> tempList = new List<string>();
                 for (int i = 0; i < translations.Length; i++)
                 {
                     tempList.Add(translations[i]);
-                    if (i % Languages.Length-1 == 0 && i != 0)
+                    if (i % Languages.Length - 1 == 0 && i != 0)
                     {
-                        
                         wordsList.Add(new Word(tempList.ToArray()));
                         tempList = new List<string>();
                     }
@@ -163,66 +153,65 @@ namespace ClassLibrary
             }
             else
             {
-                throw new ArgumentException();
-            } 
+                throw new ArgumentException("Invalid number of strings!");
+            }
             Save();
 
             //ta ut längd på ord och spara i en separat lista
             //Kolla längd på vår lista. trans = lang list. trans.Length % lang.Length. 
-
         }
 
-        //public bool Remove(int translation, string word)
-        ////translation motsvarar index i Languages.Sök igenom språket och ta bort ordet.
-        //{
-        //   wordListen.Remove
-
-        //    for (int i = 0; i < wordList.Count; i++)
-        //    {
-        //        if (Languages[i] == wordList.)
-        //        {
-
-        //        }
-
-        //    }
-        //}
-
+        public bool Remove(int translation, string word)
+        //translation motsvarar index i Languages.Sök igenom språket och ta bort ordet.
+        {
+            for (int i = 0; i < wordsList.Count; i++)
+            {
+                //Om inmatade ordet är översättningen,-arna på position i wordsList 
+                if (word.Equals(wordsList[i].Translations[translation], StringComparison.InvariantCultureIgnoreCase))
+                {
+                    wordsList.RemoveAt(i);
+                    //Save(); //Inte ha den här för då sparar den efter varje ord och inte när alla ord är borttagna
+                    return true;
+                }
+            }
+            return false;
+        }
 
         public int Count() => wordsList.Count;
         //Räknar och returnerar antal ord i listan.
 
+
+        //public void List(int sortByTranslation, Action<string[]> showTranslations)
+        ////sortByTranslation = Vilket språk listan ska sorteras på.showTranslations = Callback som anropas för varje ord i listan.
+        //{
+        //    if (sortByTranslation < 0 || sortByTranslation >= Languages.Count())
+        //    {
+
+        //    }
+        //    foreach (Word word in wordsList.OrderBy(w => w.Translations[sortByTranslation]).ToList())
+        //    {
+        //        showTranslations?.Invoke(word.Translations);
+        //    }
+        //}
+
+
+        public Word GetWordToPractice()
+        //Returnerar slumpmässigt Word från listan, med slumpmässigt valda FromLanguage och ToLanguage(dock inte samma).
+        //TODO kanske lägga till kontroll att det inte ska vara samma ord. kanske en enkel if?
+        {
+            Random random = new Random();
+            int index = random.Next(wordsList.Count);
+
+            int fromLanguage = random.Next(0, Languages.Length);
+            int toLanguage = random.Next(0, Languages.Length);
+
+            while (fromLanguage == toLanguage)
+            {
+                fromLanguage = random.Next(0, Languages.Length);
+            }
+
+            return new Word(fromLanguage, toLanguage, wordsList[index].Translations);
+        }
     }
-    //public void List(int sortByTranslation, Action<string[]> showTranslations)
-    ////sortByTranslation = Vilket språk listan ska sorteras på.showTranslations = Callback som anropas för varje ord i listan.
-    //{
-    //    if (sortByTranslation < 0 || sortByTranslation >= Languages.Count())
-    //    {
-
-    //    }
-    //    foreach (Word word in wordsList.OrderBy(w => w.Translations[sortByTranslation]).ToList())
-    //    {
-    //        showTranslations?.Invoke(word.Translations);
-    //    }
-    //}
-
-
-    //Kunna använda ett lamdauttryck
-
-    //public Word GetWordToPractice()
-    ////Returnerar slumpmässigt Word från listan, med slumpmässigt valda FromLanguage och ToLanguage(dock inte samma).
-    //{
-    //    Random rnd = new Random();
-    //    int index = rnd.Next(wordList.Count);
-
-    //    int fromLanguage = rnd.Next(0, Languages.Length);
-    //    int toLanguage = rnd.Next(0, Languages.Length);
-
-    //    while (fromLanguage == toLanguage)
-    //    {
-
-    //    }
-    //    return new Word(fromLanguage, toLanguage, wordList[index].Translations);
-    //}
-
 }
 
