@@ -9,6 +9,8 @@ namespace Vocables
     class Program
     {
         public delegate WordList LoadWordList(string name);
+
+
         static void Main(string[] args)
         {
             WordList.CreateFolder();
@@ -39,14 +41,14 @@ namespace Vocables
                     }
                     LoadWordList wordList = new LoadWordList(WordList.LoadList); //Laddar in listan
                     WordList wordList1 = wordList.Invoke(args[1]); //Skapa ny lista där vi kallar på listnamn/lägger in ord?
-                                        
+
                     int totalGuesses = 0;
                     int correctAnswers = 0;
 
                     while (true)
                     {
                         Word word = wordList1.GetWordToPractice();
-                        
+
                         Console.WriteLine(
                             $"Translate the \"{wordList1.Languages[word.FromLanguage]}\" word: " +
                             $"{word.Translations[word.FromLanguage]}, " +
@@ -60,7 +62,7 @@ namespace Vocables
                             Console.ReadKey();
                             break;
                         }
-                        else if(input == word.Translations[word.ToLanguage])
+                        else if (input == word.Translations[word.ToLanguage])
                         {
                             Console.WriteLine("That is the correct answer!");
                             totalGuesses++;
@@ -123,7 +125,30 @@ namespace Vocables
             }
             else if (args[0] == "-words")
             {
-                // Do stuff
+                LoadWordList wordList = new LoadWordList(WordList.LoadList);
+                WordList wordList1 = wordList.Invoke(args[1]);
+                string[] languages = wordList1.Languages;
+                //TODO hur få in args[2] i sortByTranslation?
+
+                Action<string[]> showTranslations = (string[] translations) =>
+                {
+                    Console.WriteLine(string.Join(',', translations));
+                };
+
+                if (args.Length < 3) //TODO Om man skriver fler språk, lägg till kontroll
+                {
+                    wordList1.List(0, showTranslations);
+                    return;
+                }
+
+                for (int i = 0; i < languages.Length; i++)
+                {
+                    if (languages[i] == args[2])
+                    {
+                        wordList1.List(i, showTranslations);
+                        break;
+                    }
+                }
             }
             else if (args[0] == "-count")
             {
@@ -137,23 +162,26 @@ namespace Vocables
                 WordList wordList1 = wordList.Invoke(args[1]);              //Lista för språken
                 string[] languages = wordList1.Languages;
 
-                List<string> tempWordList = new List<string>();
+                //List<string> tempWordList = new List<string>();
+                string[] translations = new string[languages.Length];
+
                 int i = 0;
 
                 while (true)
                 {
                     Console.WriteLine($"Enter a {languages[i % languages.Length]} word : ");
                     string input = Console.ReadLine();
+                    //tempWordList.Add(input);
+                    i++;
+                    //wordList1.Add(tempWordList.ToArray());
+                    translations[i] == input;
+
+
                     if (input == "" || input == " ")
                     {
                         break;
                     }
-                    tempWordList.Add(input);
-                    i++;
                 }
-                wordList1.Add(tempWordList.ToArray());
-                //TODO Lägga till orden i lista ist för skriva över
-
             }
             else if (args[0] == "-new") //Skapar en ny fil/lista med angivna språk
             {
@@ -191,7 +219,6 @@ namespace Vocables
             {
                 PrintUsage();
             }
-
             Console.WriteLine("Press any key to end program.");
             Console.ReadKey();
         }

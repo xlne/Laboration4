@@ -34,7 +34,7 @@ namespace ClassLibrary
         }
 
         private List<Word> wordsList = new List<Word>();        //Lista för listorna?
-               
+
         public string Name { get; }
         //Namnet på listan.
         public string[] Languages { get; }
@@ -135,26 +135,34 @@ namespace ClassLibrary
         public void Add(params string[] translations)
         //Lägger till ord i listan. Kasta ArgumentException om det är fel antal translations.
         {
-            StringBuilder stringBuilder = new StringBuilder();
 
-            int length = translations.Length % Languages.Length;
-            if (length == 0)
-            {
-                List<string> tempList = new List<string>();
-                for (int i = 0; i < translations.Length; i++)
-                {
-                    tempList.Add(translations[i]);
-                    if (i % Languages.Length - 1 == 0 && i != 0)
-                    {
-                        wordsList.Add(new Word(tempList.ToArray()));
-                        tempList = new List<string>();
-                    }
-                }
-            }
+            if (translations.Length != Languages.Length)
+                throw new ArgumentException("Wrong number of translations.");
             else
-            {
-                throw new ArgumentException("Invalid number of strings!");
-            }
+                wordsList.Add(new Word(translations));
+
+
+            //StringBuilder stringBuilder = new StringBuilder();
+
+            //int length = translations.Length % Languages.Length;
+            //if (length == 0)
+            //{
+            //    List<string> tempList = new List<string>();
+            //    for (int i = 0; i < translations.Length; i++)
+            //    {
+            //        tempList.Add(translations[i]);
+            //        if (i % Languages.Length - 1 == 0 && i != 0)
+            //        {
+            //            wordsList.Add(new Word(tempList.ToArray()));
+            //            tempList = new List<string>();
+            //        }
+            //    }
+            //}
+            //else
+            //{
+            //    throw new ArgumentException("Invalid number of strings!");
+            //}
+            
             Save();
 
             //ta ut längd på ord och spara i en separat lista
@@ -180,19 +188,18 @@ namespace ClassLibrary
         public int Count() => wordsList.Count;
         //Räknar och returnerar antal ord i listan.
 
-
-        //public void List(int sortByTranslation, Action<string[]> showTranslations)
-        ////sortByTranslation = Vilket språk listan ska sorteras på.showTranslations = Callback som anropas för varje ord i listan.
-        //{
-        //    if (sortByTranslation < 0 || sortByTranslation >= Languages.Count())
-        //    {
-
-        //    }
-        //    foreach (Word word in wordsList.OrderBy(w => w.Translations[sortByTranslation]).ToList())
-        //    {
-        //        showTranslations?.Invoke(word.Translations);
-        //    }
-        //}
+        public void List(int sortByTranslation, Action<string[]> showTranslations)
+        //sortByTranslation = Vilket språk listan ska sorteras på.showTranslations = Callback som anropas för varje ord i listan.
+        {
+            if (sortByTranslation < 0 || sortByTranslation >= Languages.Count())
+            {
+                sortByTranslation = 0;
+            }
+            foreach (Word word in wordsList.OrderBy(w => w.Translations[sortByTranslation]).ToList())
+            {
+                showTranslations?.Invoke(word.Translations);
+            }
+        }
 
 
         public Word GetWordToPractice()
