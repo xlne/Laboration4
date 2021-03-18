@@ -23,7 +23,7 @@ namespace Vocables
             {
                 foreach (string s in WordList.GetLists())
                 {
-                    Console.WriteLine(s);
+                    Console.WriteLine(Path.GetFileNameWithoutExtension(s));
                 }
             }
             else if (args[0] == "-practice")
@@ -163,25 +163,59 @@ namespace Vocables
                 string[] languages = wordList1.Languages;
 
                 //List<string> tempWordList = new List<string>();
-                string[] translations = new string[languages.Length];
+                //string[] translations = new string[languages.Length];
 
-                int i = 0;
-
-                while (true)
                 {
-                    Console.WriteLine($"Enter a {languages[i % languages.Length]} word : ");
-                    string input = Console.ReadLine();
-                    //tempWordList.Add(input);
-                    i++;
-                    //wordList1.Add(tempWordList.ToArray());
-                    translations[i] == input;
+                    bool areWordsAdded = false;
 
-
-                    if (input == "" || input == " ")
+                    while (true)
                     {
-                        break;
+                        Console.Write("Write a word in {0}: ", wordList1.Languages[0]);
+
+                        string[] translations = new string[wordList1.Languages.Length];
+                        string firstTranslation = translations[0] = Console.ReadLine();
+
+                        if (firstTranslation == string.Empty)
+                            break;
+
+                        for (int i = 1; i < translations.Length; i++)
+                        {
+                            string transl;
+                            do
+                            {
+                                Console.Write("Translate {0} to {1}: ", firstTranslation, wordList1.Languages[i]);
+                                transl = Console.ReadLine();
+
+                            } while (transl == string.Empty);
+
+                            translations[i] = transl;
+                        }
+
+                        wordList1.Add(translations);
+                        areWordsAdded = true;
                     }
+
+                    if (areWordsAdded)
+                        wordList1.Save();
                 }
+
+                //int i = 0;
+
+                //while (true)
+                //{
+                //    Console.WriteLine($"Enter a {languages[i % languages.Length]} word : ");
+                //    string input = Console.ReadLine();
+                //    //tempWordList.Add(input);
+                //    i++;
+                //    //wordList1.Add(tempWordList.ToArray());
+                //    translations[i] == input;
+
+
+                //    if (input == "" || input == " ")
+                //    {
+                //        break;
+                //    }
+                //}
             }
             else if (args[0] == "-new") //Skapar en ny fil/lista med angivna språk
             {
@@ -197,23 +231,57 @@ namespace Vocables
 
                 string[] languages = wordList.Languages;
 
-                List<string> tempWordList = new List<string>();
-                int i = 0;
-
-                while (true)
                 {
-                    Console.WriteLine($"Enter a {languages[i % languages.Length]} word : "); //TODO kapar sista orden som läggs in
-                    string input = Console.ReadLine();
-                    if (input == "" || input == " ")
+                    bool areWordsAdded = false;
+
+                    while (true)
                     {
-                        break;
+                        Console.Write("Write a word in {0}: ", wordList.Languages[0]);
+
+                        string[] translations = new string[wordList.Languages.Length];
+                        string firstTranslation = translations[0] = Console.ReadLine();
+
+                        if (firstTranslation == string.Empty)
+                            break;
+
+                        for (int i = 1; i < translations.Length; i++)
+                        {
+                            string transl;
+                            do
+                            {
+                                Console.Write("Translate {0} to {1}: ", firstTranslation, wordList.Languages[i]);
+                                transl = Console.ReadLine();
+
+                            } while (transl == string.Empty);
+
+                            translations[i] = transl;
+                        }
+
+                        wordList.Add(translations);
+                        areWordsAdded = true;
                     }
-                    tempWordList.Add(input);
-                    i++;
+
+                    if (areWordsAdded)
+                        wordList.Save();
                 }
-                //TODO Skriver över, lägger inte till i existerande lista
-                wordList.Add(tempWordList.ToArray());
-                wordList.Save();
+
+                //List<string> tempWordList = new List<string>();
+                //int i = 0;
+
+                //while (true)
+                //{
+                //    Console.WriteLine($"Enter a {languages[i % languages.Length]} word : "); //TODO kapar sista orden som läggs in
+                //    string input = Console.ReadLine();
+                //    if (input == "" || input == " ")
+                //    {
+                //        break;
+                //    }
+                //    tempWordList.Add(input);
+                //    i++;
+                //}
+                ////TODO Skriver över, lägger inte till i existerande lista
+                //wordList.Add(tempWordList.ToArray());
+                //wordList.Save();
             }
             else
             {
