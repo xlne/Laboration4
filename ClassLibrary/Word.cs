@@ -10,7 +10,7 @@ namespace ClassLibrary
         public int ToLanguage { get; }
 
         public Word(params string[] translations)
-        //initialiserar ’Translations’ med data som skickas in som ’translations’
+        //Initialize Translations with the data from translations
         {
             List<string> translation = new List<string>();
             foreach (var @string in translations)
@@ -20,9 +20,8 @@ namespace ClassLibrary
             Translations = translation.ToArray();
         }
 
-
         public Word(int fromLanguage, int toLanguage, params string[] translations)
-        //som ovan, fast sätter även FromLanguage och ToLanguage.
+        //Initializes FromLanguage, ToLanguage and Translations.
         {
             Translations = translations;
             FromLanguage = fromLanguage;
