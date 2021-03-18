@@ -9,10 +9,10 @@ namespace ClassLibrary
 {
     public class WordList
     {
-        //localPath pekar på användarens \AppData\Local\Vocables
+        //localPath defines the user's \AppData\Local\Vocables
         public static string localPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"Vocables");
 
-
+        //Creates a folder to save the lists, if the folder does not already exists
         public static void CreateFolder()
         {
             try
@@ -32,40 +32,31 @@ namespace ClassLibrary
                 Console.WriteLine(e.Message);
             }
         }
+        
+        //A list to save the translated words
+        private List<Word> wordsList = new List<Word>();
 
-        private List<Word> wordsList = new List<Word>();        //Lista för listorna?
-
-        public string Name { get; }
-        //Namnet på listan.
-        public string[] Languages { get; }
-        //Namnen på språken.
-
+        public string Name { get; }        
+        public string[] Languages { get; }    
         public WordList(string name, params string[] languages)
-        //Konstruktor.Sätter properites Name och Languages till parametrarnas värden.
+        //A constructor.Sets properites Name and Languages to the value of the parameters
         {
             this.Name = name;
             this.Languages = languages;
-
         }
 
         public static string[] GetLists()
-        //Returnerar array med namn på alla listor som finns lagrade(utan filändelsen).
+        //Return the array with name of all the lists that is stored
         {
-
-            string[] listLists = Directory.GetFiles(localPath, "*.dat");       //Söker och listar alla filer som slutar på .dat
-
+            string[] listLists = Directory.GetFiles(localPath, "*.dat");
             return listLists;
         }
 
-
         public static WordList LoadList(string name)
-        //Laddar in ordlistan(name anges utan filändelse) och returnerar som WordList.
-        //Bygg ihop sökväg + ändelse, finns fil, skapa streamreader, häng på trimend för plocka ort ; sen split på ; split ger array av strängar, 
-        //dekl ny wordlist, går in while-loop !not end stream, 
+        //Load the list and return as WordList
         {
             WordList words = null;
             List<string[]> localList = new List<string[]>();
-
             var localPathListName = Path.Combine(localPath, $"{name}.dat");
 
             if (!File.Exists(localPathListName))
@@ -93,7 +84,8 @@ namespace ClassLibrary
             words.wordsList = tempwordList;
             return words;
         }
-        public void Save() // Sparar listan till en fil med samma namn som listan och filändelse.dat
+        public void Save() 
+        //Saves the list to a file with the same name as the list
         {
             StringBuilder stringBuilder = new StringBuilder();
             string fileName = Path.Combine(localPath, $"{Name}.dat");
@@ -133,52 +125,28 @@ namespace ClassLibrary
         }
 
         public void Add(params string[] translations)
-        //Lägger till ord i listan. Kasta ArgumentException om det är fel antal translations.
+        //Adds words to the list. Throw ArgumentException if the number of translations is not correct
         {
 
             if (translations.Length != Languages.Length)
+            {
                 throw new ArgumentException("Wrong number of translations.");
+            }
             else
+            {
                 wordsList.Add(new Word(translations));
-
-
-            //StringBuilder stringBuilder = new StringBuilder();
-
-            //int length = translations.Length % Languages.Length;
-            //if (length == 0)
-            //{
-            //    List<string> tempList = new List<string>();
-            //    for (int i = 0; i < translations.Length; i++)
-            //    {
-            //        tempList.Add(translations[i]);
-            //        if (i % Languages.Length - 1 == 0 && i != 0)
-            //        {
-            //            wordsList.Add(new Word(tempList.ToArray()));
-            //            tempList = new List<string>();
-            //        }
-            //    }
-            //}
-            //else
-            //{
-            //    throw new ArgumentException("Invalid number of strings!");
-            //}
-            
+            }
             Save();
-
-            //ta ut längd på ord och spara i en separat lista
-            //Kolla längd på vår lista. trans = lang list. trans.Length % lang.Length. 
         }
 
         public bool Remove(int translation, string word)
-        //translation motsvarar index i Languages.Sök igenom språket och ta bort ordet.
+        //Searches for the word and removes the word with translations
         {
             for (int i = 0; i < wordsList.Count; i++)
-            {
-                //Om inmatade ordet är översättningen,-arna på position i wordsList 
+            {                
                 if (word.Equals(wordsList[i].Translations[translation], StringComparison.InvariantCultureIgnoreCase))
                 {
-                    wordsList.RemoveAt(i);
-                    //Save(); //Inte ha den här för då sparar den efter varje ord och inte när alla ord är borttagna
+                    wordsList.RemoveAt(i);                    
                     return true;
                 }
             }
@@ -186,10 +154,10 @@ namespace ClassLibrary
         }
 
         public int Count() => wordsList.Count;
-        //Räknar och returnerar antal ord i listan.
+        //Counts and returns the number of words in the wordlist
 
         public void List(int sortByTranslation, Action<string[]> showTranslations)
-        //sortByTranslation = Vilket språk listan ska sorteras på.showTranslations = Callback som anropas för varje ord i listan.
+        //Sorts the list by translation
         {
             if (sortByTranslation < 0 || sortByTranslation >= Languages.Count())
             {
@@ -201,10 +169,8 @@ namespace ClassLibrary
             }
         }
 
-
         public Word GetWordToPractice()
-        //Returnerar slumpmässigt Word från listan, med slumpmässigt valda FromLanguage och ToLanguage(dock inte samma).
-        //TODO kanske lägga till kontroll att det inte ska vara samma ord. kanske en enkel if?
+        //Returns a word to be translated        
         {
             Random random = new Random();
             int index = random.Next(wordsList.Count);
@@ -216,7 +182,6 @@ namespace ClassLibrary
             {
                 fromLanguage = random.Next(0, Languages.Length);
             }
-
             return new Word(fromLanguage, toLanguage, wordsList[index].Translations);
         }
     }
