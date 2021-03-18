@@ -2,7 +2,7 @@
   "profiles": {
     "Vocables": {
       "commandName": "Project",
-      "commandLineArgs": "-add lang3"
+      "commandLineArgs": "-lists"
     }
   }
 }
