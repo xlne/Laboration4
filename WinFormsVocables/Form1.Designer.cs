@@ -31,11 +31,11 @@ namespace WinFormsVocables
         {
             this.btn_loadList = new System.Windows.Forms.Button();
             this.btn_NewWord = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
+            this.btn_removeWord = new System.Windows.Forms.Button();
+            this.btn_newList = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.button5 = new System.Windows.Forms.Button();
-            this.button6 = new System.Windows.Forms.Button();
+            this.btn_sortList = new System.Windows.Forms.Button();
+            this.btn_practice = new System.Windows.Forms.Button();
             this.listView1 = new System.Windows.Forms.ListView();
             this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
             this.SuspendLayout();
@@ -52,6 +52,7 @@ namespace WinFormsVocables
             // 
             // btn_NewWord
             // 
+            this.btn_NewWord.Enabled = false;
             this.btn_NewWord.Location = new System.Drawing.Point(133, 18);
             this.btn_NewWord.Name = "btn_NewWord";
             this.btn_NewWord.Size = new System.Drawing.Size(86, 35);
@@ -60,24 +61,26 @@ namespace WinFormsVocables
             this.btn_NewWord.UseVisualStyleBackColor = true;
             this.btn_NewWord.Click += new System.EventHandler(this.button2_Click);
             // 
-            // button3
+            // btn_removeWord
             // 
-            this.button3.Location = new System.Drawing.Point(238, 18);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(95, 35);
-            this.button3.TabIndex = 3;
-            this.button3.Text = "Remove Word";
-            this.button3.UseVisualStyleBackColor = true;
+            this.btn_removeWord.Enabled = false;
+            this.btn_removeWord.Location = new System.Drawing.Point(238, 18);
+            this.btn_removeWord.Name = "btn_removeWord";
+            this.btn_removeWord.Size = new System.Drawing.Size(95, 35);
+            this.btn_removeWord.TabIndex = 3;
+            this.btn_removeWord.Text = "Remove Word";
+            this.btn_removeWord.UseVisualStyleBackColor = true;
+            this.btn_removeWord.Click += new System.EventHandler(this.button3_Click);
             // 
-            // button4
+            // btn_newList
             // 
-            this.button4.Location = new System.Drawing.Point(355, 18);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(95, 35);
-            this.button4.TabIndex = 4;
-            this.button4.Text = "New List";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
+            this.btn_newList.Location = new System.Drawing.Point(355, 18);
+            this.btn_newList.Name = "btn_newList";
+            this.btn_newList.Size = new System.Drawing.Size(95, 35);
+            this.btn_newList.TabIndex = 4;
+            this.btn_newList.Text = "New List";
+            this.btn_newList.UseVisualStyleBackColor = true;
+            this.btn_newList.Click += new System.EventHandler(this.button4_Click);
             // 
             // label1
             // 
@@ -89,23 +92,27 @@ namespace WinFormsVocables
             this.label1.Text = "Number of Words: ";
             this.label1.Visible = false;
             // 
-            // button5
+            // btn_sortList
             // 
-            this.button5.Location = new System.Drawing.Point(476, 18);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(95, 35);
-            this.button5.TabIndex = 6;
-            this.button5.Text = "Sort List";
-            this.button5.UseVisualStyleBackColor = true;
+            this.btn_sortList.Enabled = false;
+            this.btn_sortList.Location = new System.Drawing.Point(476, 18);
+            this.btn_sortList.Name = "btn_sortList";
+            this.btn_sortList.Size = new System.Drawing.Size(95, 35);
+            this.btn_sortList.TabIndex = 6;
+            this.btn_sortList.Text = "Sort List";
+            this.btn_sortList.UseVisualStyleBackColor = true;
+            this.btn_sortList.Click += new System.EventHandler(this.btn_sortList_Click);
             // 
-            // button6
+            // btn_practice
             // 
-            this.button6.Location = new System.Drawing.Point(594, 18);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(122, 35);
-            this.button6.TabIndex = 7;
-            this.button6.Text = "Practice your words";
-            this.button6.UseVisualStyleBackColor = true;
+            this.btn_practice.Enabled = false;
+            this.btn_practice.Location = new System.Drawing.Point(594, 18);
+            this.btn_practice.Name = "btn_practice";
+            this.btn_practice.Size = new System.Drawing.Size(122, 35);
+            this.btn_practice.TabIndex = 7;
+            this.btn_practice.Text = "Practice your words";
+            this.btn_practice.UseVisualStyleBackColor = true;
+            this.btn_practice.Click += new System.EventHandler(this.btn_practice_Click);
             // 
             // listView1
             // 
@@ -129,11 +136,11 @@ namespace WinFormsVocables
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.listView1);
-            this.Controls.Add(this.button6);
-            this.Controls.Add(this.button5);
+            this.Controls.Add(this.btn_practice);
+            this.Controls.Add(this.btn_sortList);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.button4);
-            this.Controls.Add(this.button3);
+            this.Controls.Add(this.btn_newList);
+            this.Controls.Add(this.btn_removeWord);
             this.Controls.Add(this.btn_NewWord);
             this.Controls.Add(this.btn_loadList);
             this.Name = "Form1";
@@ -146,11 +153,11 @@ namespace WinFormsVocables
         #endregion
         private System.Windows.Forms.Button btn_loadList;
         private System.Windows.Forms.Button btn_NewWord;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button btn_removeWord;
+        private System.Windows.Forms.Button btn_newList;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button button5;
-        private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.Button btn_sortList;
+        private System.Windows.Forms.Button btn_practice;
         private System.Windows.Forms.ListView listView1;
         private System.Windows.Forms.ColumnHeader columnHeader1;
     }
