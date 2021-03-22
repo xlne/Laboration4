@@ -64,7 +64,7 @@ namespace WinFormsVocables
         private void button2_Click(object sender, EventArgs e) //New word-knappen.
         {
             if (listView1 != null)
-            {                
+            {
                 LoadWordList wordList = new LoadWordList(WordList.LoadList);
                 WordList wordList1 = wordList.Invoke(localPath);
                 string[] languages = wordList1.Languages;
@@ -186,7 +186,7 @@ namespace WinFormsVocables
             WordList wordList1 = wordList.Invoke(localPath);
             string[] languages = wordList1.Languages;
             string languagesInList = Interaction.InputBox("Choose the language you want to remove a word from: ");
-            string[] wordsToBeRemoved = Array.Empty<string>(); 
+            string[] wordsToBeRemoved = Array.Empty<string>();
             int langIndex = -1;
             //TODO EJ FÄRDIG METOD. Får ej in ord att radera i arrayen.
             for (int i = 0; i < wordsToBeRemoved.Length; i++)
@@ -229,7 +229,49 @@ namespace WinFormsVocables
 
         private void btn_practice_Click(object sender, EventArgs e)
         {
+            LoadWordList wordList = new LoadWordList(WordList.LoadList);
+            WordList wordList1 = wordList.Invoke(localPath);
 
+            int totalGuesses = 0;
+            int correctAnswers = 0;
+
+            while (true)
+            {
+                Word word = wordList1.GetWordToPractice();
+                
+                string input = Interaction.InputBox(
+                    $"Translate the \"{wordList1.Languages[word.FromLanguage]}\" word: " +
+                    $"{word.Translations[word.FromLanguage]}, " +
+                    $"to \"{wordList1.Languages[word.ToLanguage]}\"" +
+                    $"\n\nLeave empty to exit"
+                    , "Practice: Translations input");
+
+                if (input == "" || input == " ")
+                {
+                    MessageBox.Show($"You guessed correct {correctAnswers} out of {totalGuesses} times.", "Result");
+                    
+                    break;
+                }
+                else if (input == word.Translations[word.ToLanguage])
+                {
+                    MessageBox.Show("That is the correct answer!", "Correct");
+                    
+                    totalGuesses++;
+                    correctAnswers++;
+                    continue;
+                }
+                else
+                {
+                    MessageBox.Show("Wrong answer. :( \n" +
+                        "Let's try a another word.", "Wrong");
+                    
+                    totalGuesses++;
+                    continue;
+                }
+            }
         }
+
+
     }
 }
+
