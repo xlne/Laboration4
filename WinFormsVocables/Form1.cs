@@ -47,10 +47,14 @@ namespace WinFormsVocables
 
                     WordList list = WordList.LoadList(localPath);
                     string[] lang = list.Languages;
-                    for (int i = 0; i < lang.Length; i++)
-                    {
-                        listView1.Items.Add(lang[i]);
-                    }
+
+                    string output = string.Join(',', lang);
+                    listView1.Items.Add(output);
+
+                    //for (int i = 0; i < lang.Length; i++)
+                    //{
+                    //    listView1.Items.Add(lang[i]);
+                    //}
                     label1.Visible = true;
                     label1.Text = "Number of words: " + list.Count().ToString(); // +""; gör int till en string. så den vet det.
                 }
@@ -185,10 +189,10 @@ namespace WinFormsVocables
             string[] wordsToBeRemoved = Array.Empty<string>();
             int langIndex = -1;
             //TODO EJ FÄRDIG METOD. Får ej in ord att radera i arrayen.
-            for (int i = 0; i < wordsToBeRemoved.Length; i++)
+            for (int i = 0; i < languages.Length; i++)
             {
-                string prompt = Interaction.InputBox("Please enter a word you wish to remove", "Remove word");
-                wordsToBeRemoved[i] = prompt;
+                string inputRemoveWord = Interaction.InputBox("Please enter a word you wish to remove", "Remove word");
+                wordsToBeRemoved[i] = inputRemoveWord;
 
             }
 
@@ -220,7 +224,32 @@ namespace WinFormsVocables
 
         private void btn_sortList_Click(object sender, EventArgs e)
         {
+            LoadWordList wordList = new LoadWordList(WordList.LoadList);
+            WordList wordList1 = wordList.Invoke(localPath);
+            string[] languages = wordList1.Languages;
+            string sortByLanguage = Interaction.InputBox("Type the language you want to sort as...");
 
+            Action<string[]> showTranslations = (string[] translations) =>
+            {
+                string output = string.Join(',', translations);
+                
+                listView1.Items.Add(output);
+            };
+
+            if (sortByLanguage == "")
+            {
+                wordList1.List(0, showTranslations);
+                return;
+            }
+
+            for (int i = 0; i < languages.Length; i++)
+            {
+                if (sortByLanguage == languages[i])
+                {
+                    wordList1.List(i, showTranslations);
+                    break;
+                }
+            }
         }
 
         private void btn_practice_Click(object sender, EventArgs e)
