@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using ClassLibrary;
-using System.IO;
+﻿using ClassLibrary;
 using Microsoft.VisualBasic;
+using System;
+using System.IO;
+using System.Linq;
+using System.Windows.Forms;
 
 
 namespace WinFormsVocables
@@ -21,18 +15,15 @@ namespace WinFormsVocables
         public static string localPath = WordList.localPath;
         public string fileName;
 
-        //button-controls
-        //btn_NewWord.Enabled = false;
-
-
         public Form1()
         {
             InitializeComponent();
+            WordList.CreateFolder();
         }
 
         private void btn_viewList_Click(object sender, EventArgs e) //Load list-button
         {
-
+            
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
                 openFileDialog.InitialDirectory = localPath;
@@ -49,26 +40,29 @@ namespace WinFormsVocables
                     string[] lang = list.Languages;
 
                     string output = string.Join(',', lang);
-                    listView1.Items.Add(output);
+                    //listView1.Items.Add(output);
+                    lbl_languages.Visible = true;
+                    lbl_languages.Text = $"Languages: " + output;
 
-                    //for (int i = 0; i < lang.Length; i++)
-                    //{
-                    //    listView1.Items.Add(lang[i]);
-                    //}
+                    //Enables the counter-lable
                     label1.Visible = true;
-                    label1.Text = "Number of words: " + list.Count().ToString(); // +""; gör int till en string. så den vet det.
+                    label1.Text = "Number of words: " + list.Count().ToString();
+                    lbl_fileName.Visible = true;
+                    lbl_fileName.Text = "List loaded:\n" + localPath;
                 }
             }
+            //Disables buttons at initial start.
             btn_NewWord.Enabled = true;
             btn_removeWord.Enabled = true;
             btn_sortList.Enabled = true;
             btn_practice.Enabled = true;
         }
 
-        private void button2_Click(object sender, EventArgs e) //New word-knappen.
+        private void button2_Click(object sender, EventArgs e) //New word-button.
         {
             if (listView1 != null)
             {
+                
                 LoadWordList wordList = new LoadWordList(WordList.LoadList);
                 WordList wordList1 = wordList.Invoke(localPath);
                 string[] languages = wordList1.Languages;
@@ -98,7 +92,7 @@ namespace WinFormsVocables
                 }
                 if (areWordsAdded)
                     wordList1.Save();
-
+                label1.Text = "Number of words: " + wordList1.Count().ToString();
 
             }
             else if (listView1 == null)
@@ -107,16 +101,11 @@ namespace WinFormsVocables
                 btn_NewWord.Enabled = false;
             }
 
-
-            //TODO Felhantering.
-            //localPath = openFileDialog.FileName.Split('.')[0];
-            //WordList list = WordList.LoadList(localPath);
-
         }
 
         private void button4_Click(object sender, EventArgs e) //New list - button
         {
-            //TODO ta bort andra rutan att språk lagts till?? 
+            string localPath = WordList.localPath;
             string fileNameInput = Interaction.InputBox("Enter the name of the new file.\n " + " Exclude the file type.", "New list", "", -1, -1);
             if (fileNameInput == "" || fileNameInput == " ")
             {
@@ -136,21 +125,19 @@ namespace WinFormsVocables
                     {
                         var fileCreated = File.Create(Path.Combine(localPath, fileNameInput + ".dat"));
                         fileCreated.Close();
-                        MessageBox.Show(fileNameInput + ".dat created successfully.", "New list created");
+                        MessageBox.Show(fileNameInput + " created successfully.", "New list created");
 
                         File.WriteAllText(Path.Combine(localPath, fileNameInput + ".dat"), languagesInput);
-
-                        MessageBox.Show($"{languagesInput} added to {fileNameInput}", "Languages added successfully.");
                     }
                     catch (Exception ee)
                     {
                         MessageBox.Show(ee.Message, "Oops!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
-                                
+
                 LoadWordList wordList = new LoadWordList(WordList.LoadList);
                 WordList wordList1 = wordList.Invoke(fileNameInput);
-                string[] languages = wordList1.Languages; 
+                string[] languages = wordList1.Languages;
                 bool areWordsAdded = false;
 
                 while (true)
@@ -177,7 +164,9 @@ namespace WinFormsVocables
                 }
                 if (areWordsAdded)
                     wordList1.Save();
+                label1.Text = "Number of words: " + wordList1.Count().ToString();
             }
+
         }
 
         private void button3_Click(object sender, EventArgs e) //remove-button
@@ -186,15 +175,14 @@ namespace WinFormsVocables
             WordList wordList1 = wordList.Invoke(localPath);
             string[] languages = wordList1.Languages;
             string languagesInList = Interaction.InputBox("Choose the language you want to remove a word from: ");
-            string[] wordsToBeRemoved = Array.Empty<string>();
-            int langIndex = -1;
-            //TODO EJ FÄRDIG METOD. Får ej in ord att radera i arrayen.
-            for (int i = 0; i < languages.Length; i++)
-            {
-                string inputRemoveWord = Interaction.InputBox("Please enter a word you wish to remove", "Remove word");
-                wordsToBeRemoved[i] = inputRemoveWord;
 
-            }
+            string inputRemoveWord;
+            int langIndex = -1;
+
+            inputRemoveWord = Interaction.InputBox("Please enter a word(s) you wish to remove." +
+                "\nSeparate the words with semicolon", "Remove word");
+            string[] wordsToBeRemoved = inputRemoveWord.Split(' ', ';').ToArray<string>();
+
 
             for (int i = 0; i < languages.Length; i++)
             {
@@ -211,31 +199,37 @@ namespace WinFormsVocables
                 {
                     if (wordList1.Remove(langIndex, w))
                     {
-                        Console.WriteLine($"{w} was removed from list.");
+                        MessageBox.Show($"{w} was removed from list.");
+
                     }
                     else
                     {
-                        Console.WriteLine("Could not find the word.");
+                        MessageBox.Show($"Could not find the word {w}");
+
                     }
                 }
                 wordList1.Save();
+                label1.Text = "Number of words: " + wordList1.Count().ToString();
             }
         }
 
-        private void btn_sortList_Click(object sender, EventArgs e)
+        private void btn_sortList_Click(object sender, EventArgs e) // SortList-button
         {
+
+
             LoadWordList wordList = new LoadWordList(WordList.LoadList);
             WordList wordList1 = wordList.Invoke(localPath);
             string[] languages = wordList1.Languages;
-            string sortByLanguage = Interaction.InputBox("Type the language you want to sort as...");
+            string sortByLanguage = Interaction.InputBox("Type the language you want to sort as...", "Title");
 
             Action<string[]> showTranslations = (string[] translations) =>
             {
                 string output = string.Join(',', translations);
-                
+
                 listView1.Items.Add(output);
             };
 
+            listView1.Items.Clear();
             if (sortByLanguage == "")
             {
                 wordList1.List(0, showTranslations);
@@ -252,18 +246,18 @@ namespace WinFormsVocables
             }
         }
 
-        private void btn_practice_Click(object sender, EventArgs e)
+        private void btn_practice_Click(object sender, EventArgs e) //Practice-button
         {
             LoadWordList wordList = new LoadWordList(WordList.LoadList);
             WordList wordList1 = wordList.Invoke(localPath);
 
             int totalGuesses = 0;
             int correctAnswers = 0;
-
+            listView1.Items.Clear();
             while (true)
             {
                 Word word = wordList1.GetWordToPractice();
-                
+
                 string input = Interaction.InputBox(
                     $"Translate the \"{wordList1.Languages[word.FromLanguage]}\" word: " +
                     $"{word.Translations[word.FromLanguage]}, " +
@@ -274,13 +268,13 @@ namespace WinFormsVocables
                 if (input == "" || input == " ")
                 {
                     MessageBox.Show($"You guessed correct {correctAnswers} out of {totalGuesses} times.", "Result");
-                    
+
                     break;
                 }
                 else if (input == word.Translations[word.ToLanguage])
                 {
                     MessageBox.Show("That is the correct answer!", "Correct");
-                    
+
                     totalGuesses++;
                     correctAnswers++;
                     continue;
@@ -289,14 +283,17 @@ namespace WinFormsVocables
                 {
                     MessageBox.Show("Wrong answer. :( \n" +
                         "Let's try a another word.", "Wrong");
-                    
+
                     totalGuesses++;
                     continue;
                 }
             }
         }
 
+        private void lbl_languages_Click(object sender, EventArgs e)
+        {
 
+        }
     }
 }
 
