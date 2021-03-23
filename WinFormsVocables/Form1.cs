@@ -112,16 +112,16 @@ namespace WinFormsVocables
 
         private void button4_Click(object sender, EventArgs e) //New list - button
         {
-            string fileNameInput = Interaction.InputBox("Please type the name of the new file you want to create." +
-                " Exclude the file type.", "New list", "", -1, -1);
+            //TODO ta bort andra rutan att språk lagts till?? 
+            string fileNameInput = Interaction.InputBox("Enter the name of the new file.\n " + " Exclude the file type.", "New list", "", -1, -1);
             if (fileNameInput == "" || fileNameInput == " ")
             {
                 MessageBox.Show("Invalid input. Filename can't be empty.", "Invalid input", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else
             {
-                string languagesInput = Interaction.InputBox($"Please type the languages you want in {fileNameInput}." +
-                    $"\nSeparate languages with semicolon.", "Languages", "", -1, -1);
+                string languagesInput = Interaction.InputBox($"Enter which languages to be in \"{fileNameInput}\"." +
+                    $"\nSeparate the languages with semicolon.", "Languages", "", -1, -1);
                 if (languagesInput == "" || languagesInput == " ")
                 {
                     MessageBox.Show("Invalid input. Languages needs to be added.", "Invalid input", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -143,11 +143,10 @@ namespace WinFormsVocables
                         MessageBox.Show(ee.Message, "Oops!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
-
-                //TODO Make loop to enter new words into the new list.
+                                
                 LoadWordList wordList = new LoadWordList(WordList.LoadList);
                 WordList wordList1 = wordList.Invoke(fileNameInput);
-                string[] languages = wordList1.Languages;
+                string[] languages = wordList1.Languages; 
                 bool areWordsAdded = false;
 
                 while (true)
@@ -174,10 +173,7 @@ namespace WinFormsVocables
                 }
                 if (areWordsAdded)
                     wordList1.Save();
-
-
             }
-
         }
 
         private void button3_Click(object sender, EventArgs e) //remove-button
