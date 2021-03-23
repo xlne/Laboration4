@@ -37,9 +37,11 @@ namespace WinFormsVocables
             this.btn_sortList = new System.Windows.Forms.Button();
             this.btn_practice = new System.Windows.Forms.Button();
             this.listView1 = new System.Windows.Forms.ListView();
-            this.Languages = new System.Windows.Forms.ColumnHeader();
+            this.Wordlist = new System.Windows.Forms.ColumnHeader();
             this.lbl_Vocables = new System.Windows.Forms.Label();
             this.lbl_authors = new System.Windows.Forms.Label();
+            this.lbl_fileName = new System.Windows.Forms.Label();
+            this.lbl_languages = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // btn_loadList
@@ -120,7 +122,7 @@ namespace WinFormsVocables
             // listView1
             // 
             this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.Languages});
+            this.Wordlist});
             this.listView1.HideSelection = false;
             this.listView1.Location = new System.Drawing.Point(28, 82);
             this.listView1.Name = "listView1";
@@ -129,10 +131,10 @@ namespace WinFormsVocables
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
             // 
-            // Languages
+            // Wordlist
             // 
-            this.Languages.Text = "Languages";
-            this.Languages.Width = 200;
+            this.Wordlist.Text = "Wordlist";
+            this.Wordlist.Width = 200;
             // 
             // lbl_Vocables
             // 
@@ -153,11 +155,34 @@ namespace WinFormsVocables
             this.lbl_authors.TabIndex = 10;
             this.lbl_authors.Text = "By Linnéa Netzell and Andreas Nilsson";
             // 
+            // lbl_fileName
+            // 
+            this.lbl_fileName.AutoSize = true;
+            this.lbl_fileName.Location = new System.Drawing.Point(28, 355);
+            this.lbl_fileName.Name = "lbl_fileName";
+            this.lbl_fileName.Size = new System.Drawing.Size(67, 15);
+            this.lbl_fileName.TabIndex = 11;
+            this.lbl_fileName.Text = "Loaded list:";
+            this.lbl_fileName.Visible = false;
+            // 
+            // lbl_languages
+            // 
+            this.lbl_languages.AutoSize = true;
+            this.lbl_languages.Location = new System.Drawing.Point(28, 340);
+            this.lbl_languages.Name = "lbl_languages";
+            this.lbl_languages.Size = new System.Drawing.Size(64, 15);
+            this.lbl_languages.TabIndex = 12;
+            this.lbl_languages.Text = "Languages";
+            this.lbl_languages.Visible = false;
+            this.lbl_languages.Click += new System.EventHandler(this.lbl_languages_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(390, 359);
+            this.ClientSize = new System.Drawing.Size(390, 416);
+            this.Controls.Add(this.lbl_languages);
+            this.Controls.Add(this.lbl_fileName);
             this.Controls.Add(this.lbl_authors);
             this.Controls.Add(this.lbl_Vocables);
             this.Controls.Add(this.listView1);
@@ -168,6 +193,9 @@ namespace WinFormsVocables
             this.Controls.Add(this.btn_removeWord);
             this.Controls.Add(this.btn_NewWord);
             this.Controls.Add(this.btn_loadList);
+            this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(406, 455);
+            this.MinimumSize = new System.Drawing.Size(406, 455);
             this.Name = "Form1";
             this.Text = "Vocables";
             this.ResumeLayout(false);
@@ -184,9 +212,11 @@ namespace WinFormsVocables
         private System.Windows.Forms.Button btn_sortList;
         private System.Windows.Forms.Button btn_practice;
         private System.Windows.Forms.ListView listView1;
-        private System.Windows.Forms.ColumnHeader Languages;
+        private System.Windows.Forms.ColumnHeader Wordlist;
         private System.Windows.Forms.Label lbl_Vocables;
         private System.Windows.Forms.Label lbl_authors;
+        private System.Windows.Forms.Label lbl_fileName;
+        private System.Windows.Forms.Label lbl_languages;
     }
 }
 

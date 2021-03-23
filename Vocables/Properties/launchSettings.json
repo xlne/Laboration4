@@ -1,8 +1,7 @@
 {
   "profiles": {
     "Vocables": {
-      "commandName": "Project",
-      "commandLineArgs": "-remove langThree tyska kartoffel"
+      "commandName": "Project"
     }
   }
 }

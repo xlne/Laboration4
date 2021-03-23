@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace ClassLibrary
 {
@@ -17,15 +16,12 @@ namespace ClassLibrary
         {
             try
             {
-                if (Directory.Exists(localPath))
-                {
-                    Console.WriteLine(localPath + " already exists. No action taken.");
-                }
-                else
+                if (!Directory.Exists(localPath))
                 {
                     DirectoryInfo cd = Directory.CreateDirectory(localPath);
-                    Console.WriteLine(localPath + " was successfully created.");
+                    
                 }
+                
             }
             catch (Exception e)
             {
