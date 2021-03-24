@@ -34,15 +34,17 @@ namespace WinFormsVocables
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     listView1.Items.Clear();
+
                     localPath = openFileDialog.FileName.Split('.')[0];
 
                     WordList list = WordList.LoadList(localPath);
                     string[] lang = list.Languages;
 
                     string output = string.Join(',', lang);
-                    //listView1.Items.Add(output);
+                    
                     lbl_languages.Visible = true;
                     lbl_languages.Text = $"Languages: " + output;
+
 
                     //Enables the counter-lable
                     label1.Visible = true;
@@ -50,8 +52,9 @@ namespace WinFormsVocables
                     lbl_fileName.Visible = true;
                     lbl_fileName.Text = "List loaded:\n" + localPath;
                 }
+
             }
-            //Disables buttons at initial start.
+            //Enables buttons after list is loaded.
             btn_NewWord.Enabled = true;
             btn_removeWord.Enabled = true;
             btn_sortList.Enabled = true;
@@ -106,7 +109,7 @@ namespace WinFormsVocables
         private void button4_Click(object sender, EventArgs e) //New list - button
         {
             string localPath = WordList.localPath;
-            string fileNameInput = Interaction.InputBox("Enter the name of the new file.\n " + " Exclude the file type.", "New list", "", -1, -1);
+            string fileNameInput = Interaction.InputBox("Enter the name of the new file.\n " + "Exclude the file type.", "New list", "", -1, -1);
             if (fileNameInput == "" || fileNameInput == " ")
             {
                 MessageBox.Show("Invalid input. Filename can't be empty.", "Invalid input", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -179,7 +182,7 @@ namespace WinFormsVocables
             string inputRemoveWord;
             int langIndex = -1;
 
-            inputRemoveWord = Interaction.InputBox("Please enter a word(s) you wish to remove." +
+            inputRemoveWord = Interaction.InputBox("Please enter word(s) you wish to remove." +
                 "\nSeparate the words with semicolon", "Remove word");
             string[] wordsToBeRemoved = inputRemoveWord.Split(' ', ';').ToArray<string>();
 
@@ -220,7 +223,7 @@ namespace WinFormsVocables
             LoadWordList wordList = new LoadWordList(WordList.LoadList);
             WordList wordList1 = wordList.Invoke(localPath);
             string[] languages = wordList1.Languages;
-            string sortByLanguage = Interaction.InputBox("Type the language you want to sort as...", "Title");
+            string sortByLanguage = Interaction.InputBox("Type the language you want to sort in...", "Sort by language");
 
             Action<string[]> showTranslations = (string[] translations) =>
             {

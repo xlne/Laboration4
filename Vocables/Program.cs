@@ -1,8 +1,8 @@
-﻿using System;
+﻿using ClassLibrary;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using ClassLibrary;
 
 namespace Vocables
 {
@@ -13,6 +13,7 @@ namespace Vocables
 
         static void Main(string[] args)
         {
+            
             WordList.CreateFolder();
 
             if (args.Count() == 0)
