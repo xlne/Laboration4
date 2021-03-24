@@ -51,7 +51,7 @@ namespace WinFormsVocables
             this.btn_loadList.Name = "btn_loadList";
             this.btn_loadList.Size = new System.Drawing.Size(108, 35);
             this.btn_loadList.TabIndex = 1;
-            this.btn_loadList.Text = "Load/Show List";
+            this.btn_loadList.Text = "Load/Show Lists";
             this.btn_loadList.UseVisualStyleBackColor = true;
             this.btn_loadList.Click += new System.EventHandler(this.btn_viewList_Click);
             // 
@@ -104,7 +104,7 @@ namespace WinFormsVocables
             this.btn_sortList.Name = "btn_sortList";
             this.btn_sortList.Size = new System.Drawing.Size(108, 35);
             this.btn_sortList.TabIndex = 6;
-            this.btn_sortList.Text = "Sort List";
+            this.btn_sortList.Text = "Sort/Show List";
             this.btn_sortList.UseVisualStyleBackColor = true;
             this.btn_sortList.Click += new System.EventHandler(this.btn_sortList_Click);
             // 
